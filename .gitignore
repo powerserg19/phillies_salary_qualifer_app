@@ -1,0 +1,14 @@
+######################
+# Intellij
+######################
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+
+#####
+#the output file
+########3
+qualifying_offer.html
