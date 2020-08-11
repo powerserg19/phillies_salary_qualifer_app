@@ -23,6 +23,8 @@ and their respective salaries. A second trace illustrates the average of those s
 Only the top 125 highest paid salaries are averaged and illustrated. 
 The dataset is drawn from this page https://questionnaire-148920.appspot.com/swe/data.html
 
+The application does load new data with each run
+
 ###############
 How to run
 ###############
@@ -42,7 +44,7 @@ How to run
 6. Ploty also offers zoom, pan, auto scale, among other controls at the top right hand corner of the browser
 
 NOTE: At this same repo location at root dir I posted and example run called:  example_qualifying_offer.html.
-NOTE: It does load the new data set with each run
+
 
 
 

@@ -46,11 +46,11 @@ def plot(players, average,num_players=DEFAULT_PLAYER_LIMIT):
             player_name.append(key)
             x_player_cnt.append(count)
             count+=1
-            if count==num_players-1:
+            if count==num_players:
                 break;
         #set the player vs salary trace
         salaries =  go.Scatter(x=x_player_cnt, y=player_sal,mode="lines+markers+text",hovertext=player_name,
-                               name="player's salaries");
+                               name="player's salaries" ,line=dict(color='red'));
         #set the average trace
         average =  go.Scatter(x=[0, num_players], y=[average,average],name="average")
         #overlay the sub plots and write to html file
