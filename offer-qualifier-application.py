@@ -40,16 +40,12 @@ def plot(players, average,num_players=DEFAULT_PLAYER_LIMIT):
     player_name =[]
     x_player_cnt =[]
     try:
-        #break out the dictionary into two lists player is the X axis, salary is the y. Stop at number of players
-        for key in players:
-            player_sal.append(players[key])
-            player_name.append(key)
-            x_player_cnt.append(count)
-            count+=1
-            if count==num_players:
-                break;
+
+        player_names = list(players.keys())
+        player_salaries = list(players.values())
+
         #set the player vs salary trace
-        salaries =  go.Scatter(x=x_player_cnt, y=player_sal,mode="lines+markers+text",hovertext=player_name,
+        salaries =  go.Scatter(x=list(range(0,num_players)), y=player_salaries,mode="lines+markers+text",hovertext=player_names,
                                name="player's salaries" ,line=dict(color='red'));
         #set the average trace
         average =  go.Scatter(x=[0, num_players], y=[average,average],name="average")
@@ -132,7 +128,6 @@ def get_average_salary(player_and_salaries, numplayers=DEFAULT_PLAYER_LIMIT):
             break;
         count+=1
     return average
-
 #
 # main application entry
 #
@@ -141,6 +136,7 @@ if __name__ == '__main__':
     print("**********Running The Phighting Phils Offer Qualifier App!....*****************************")
     print("Using Python Version" + str( sys.version_info) )
     print("Using Plotly Version " + plotly.__version__)
+
     try:
         player_and_salalries = get_players_from_html(str(sys.argv[1]))
         average = get_average_salary(player_and_salalries)
