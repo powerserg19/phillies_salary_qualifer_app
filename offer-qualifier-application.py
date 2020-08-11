@@ -33,12 +33,7 @@ DEFAULT_PLAYER_LIMIT=125
 ## got code samples from https://plotly.com/
 ##
 def plot(players, average,num_players=DEFAULT_PLAYER_LIMIT):
-    fig = make_subplots( rows =1, cols=2)
 
-    count = 0
-    player_sal =[]
-    player_name =[]
-    x_player_cnt =[]
     try:
 
         player_names = list(players.keys())
@@ -84,7 +79,7 @@ def get_players_from_html(url):
     for j in range(0,len(tr_elements)):
         #T is our j'th row
         T=tr_elements[j]
-        #If row is not of size 10, the //tr data is not from our table
+        #If row is not of size 4, the //tr data is not from our table
         if len(T)!=4:
             break
         #i is the index of our column
@@ -107,7 +102,7 @@ def get_players_from_html(url):
                     break
 
                 i+=1
-            ### sort a dictionary by value
+            ### sort a dictionary by value in descending order
             #https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-1.php
             player_and_salalries_sorted = dict(sorted(player_and_salalries.items(), key=operator.itemgetter(1), reverse=True))
         except:
