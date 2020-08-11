@@ -18,11 +18,13 @@ DEFAULT_PLAYER_LIMIT=125
 #
 #  It then saves it to a file called qualifying_offer.html in the same dirctory as this run time script.
 #
+#  Using Python Versionsys.version_info(major=3, minor=6, micro=9, releaselevel='final', serial=0)
+#  Using Plotly Version 4.9.0
+#
 #  Author: Sergio DiVentura
 #  REV 1.0, August 11 2020
 #
 ############################################
-
 
 
 
@@ -37,25 +39,31 @@ def plot(players, average,num_players=DEFAULT_PLAYER_LIMIT):
     player_sal =[]
     player_name =[]
     x_player_cnt =[]
-    #break out the dictionary into two lists player is the X axis, salary is the y. Stop at number of players
-    for key in players:
-        player_sal.append(players[key])
-        player_name.append(key)
-        x_player_cnt.append(count)
-        count+=1
-        if count==num_players-1:
-            break;
-    #set the player vs salary trace
-    salaries =  go.Scatter(x=x_player_cnt, y=player_sal,mode="lines+markers+text",hovertext=player_name,
-                           name="player's salaries");
-    #set the average trace
-    average =  go.Scatter(x=[0, num_players], y=[average,average],name="average")
-    #overlay the sub plots and write to html file
-    data =  [average , salaries]
+    try:
+        #break out the dictionary into two lists player is the X axis, salary is the y. Stop at number of players
+        for key in players:
+            player_sal.append(players[key])
+            player_name.append(key)
+            x_player_cnt.append(count)
+            count+=1
+            if count==num_players-1:
+                break;
+        #set the player vs salary trace
+        salaries =  go.Scatter(x=x_player_cnt, y=player_sal,mode="lines+markers+text",hovertext=player_name,
+                               name="player's salaries");
+        #set the average trace
+        average =  go.Scatter(x=[0, num_players], y=[average,average],name="average")
+        #overlay the sub plots and write to html file
+        data =  [average , salaries]
 
-    fig = go.Figure(data=data)
-    fig.update_layout(title_text="Players and Their Salaries with Average")
-    fig.write_html("qualifying_offer.html")
+        fig = go.Figure(data=data)
+        fig.update_layout(title_text="Players and Their Salaries with Average")
+        fig.write_html("qualifying_offer.html")
+    except:
+        print ("failed writing resultant data!")
+        raise
+
+
 
 #
 #  reads the html page and saves the players name
@@ -85,30 +93,30 @@ def get_players_from_html(url):
             break
         #i is the index of our column
         i=0
-        #Iterate through the first two columns player name and salary
-        for t in T.iterchildren():
-            data=t.text_content()
-            if i==0:
-                player_name = str(data)
-            #Check if row is empty
-            if i == 1:
-                try:
+        try:
+            #Iterate through the first two columns player name and salary
+            for t in T.iterchildren():
+                data=t.text_content()
+                if i==0:
+                    player_name = str(data)
+                #Check if row is empty
+                if i == 1:
                     ###strip out non numericals in a string
                     #https://stackoverflow.com/questions/1249388/removing-all-non-numeric-characters-from-string-in-python
                     salary=str(re.sub("[^0-9]", "",data))
                     #if we can get a number out of it then store it
                     if salary.isnumeric():
-                       player_and_salalries[player_name] = int(salary)
+                        player_and_salalries[player_name] = int(salary)
+                    #we only want the first two columns
+                    break
 
-                except:
-                    pass
-                #we only want the first two columns
-                break;
-
-            i+=1
-    ### sort a dictionary by value
-    #https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-1.php
-    player_and_salalries_sorted = dict(sorted(player_and_salalries.items(), key=operator.itemgetter(1), reverse=True))
+                i+=1
+            ### sort a dictionary by value
+            #https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-1.php
+            player_and_salalries_sorted = dict(sorted(player_and_salalries.items(), key=operator.itemgetter(1), reverse=True))
+        except:
+            print ("Failed reading salary data!")
+            raise
 
     return player_and_salalries_sorted
 #
@@ -124,14 +132,20 @@ def get_average_salary(player_and_salaries, numplayers=DEFAULT_PLAYER_LIMIT):
             break;
         count+=1
     return average
+
+#
+# main application entry
+#
 if __name__ == '__main__':
 
     print("**********Running The Phighting Phils Offer Qualifier App!....*****************************")
     print("Using Python Version" + str( sys.version_info) )
     print("Using Plotly Version " + plotly.__version__)
+    try:
+        player_and_salalries = get_players_from_html(str(sys.argv[1]))
+        average = get_average_salary(player_and_salalries)
+        plot(player_and_salalries, average)
+    except:
+        print ("Failed to produce offer value!")
 
-    player_and_salalries = get_players_from_html(str(sys.argv[1]))
-    average = get_average_salary(player_and_salalries)
-    plot(player_and_salalries, average)
-
-    print("Offer qualifier Complete. Refer to file qualifying_offer.html for results")
+    print("Offer qualifier Complete! Refer to file qualifying_offer.html for results")
