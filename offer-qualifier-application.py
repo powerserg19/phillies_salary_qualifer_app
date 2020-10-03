@@ -1,3 +1,4 @@
+import webbrowser
 import operator
 import plotly
 from plotly.subplots import make_subplots
@@ -50,6 +51,7 @@ def plot(players, average,num_players=DEFAULT_PLAYER_LIMIT):
         fig = go.Figure(data=data)
         fig.update_layout(title_text="Players and Their Salaries with Average")
         fig.write_html("qualifying_offer.html")
+        webbrowser.open('qualifying_offer.html', new=2)
     except:
         print ("failed writing resultant data!")
         raise
